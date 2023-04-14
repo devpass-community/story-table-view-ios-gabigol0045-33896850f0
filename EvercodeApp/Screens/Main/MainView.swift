@@ -1,10 +1,15 @@
 import UIKit
 
 final class MainView: UIView {
+
+    private lazy var identifier = "CellIdentifier"
         
     lazy var tableView: UITableView = {
        
         let view = UITableView()
+        view.delegate = self
+        view.dataSource = self
+        view.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -56,5 +61,17 @@ private extension MainView {
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+    }
+}
+
+extension MainView: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+        cell.textLabel?.text = items[indexPath.row]
+        return cell
     }
 }
